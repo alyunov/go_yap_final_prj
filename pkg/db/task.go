@@ -113,3 +113,61 @@ func UpdateTask(task *Task) error {
 	}
 	return nil
 }
+
+func TaskDone(id string) error {
+	//var t Task
+
+	t, err := GetTask(id)
+	if err != nil {
+		return err
+	}
+	if t.Repeat == "" {
+
+		err := DeleteTask(id)
+		if err != nil {
+			return err
+		}
+
+	} else {
+		next, err := model.NextDate(time.Now(), t.Date, t.Repeat)
+		if err != nil {
+			return err
+		}
+		updatedTask := &Task{
+			ID:      t.ID,
+			Date:    next,
+			Title:   t.Title,
+			Comment: t.Comment,
+			Repeat:  t.Repeat,
+		}
+		err = UpdateTask(updatedTask)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func DeleteTask(id string) error {
+	if id == "" {
+		return fmt.Errorf(`{"error":"Не указан id"}`)
+	}
+
+	query := "DELETE FROM scheduler WHERE id = ?"
+	result, err := db.Exec(query, id)
+	if err != nil {
+		return fmt.Errorf(`{"error":"Не удалось удалить задачу"}`)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf(`{"error":"Не удалось посчитать измененные строки"}`)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf(`{"error":"Задача с таким id не найдена"}`)
+	}
+
+	return nil
+}
