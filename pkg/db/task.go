@@ -101,15 +101,15 @@ func UpdateTask(task *Task) error {
 	query := `UPDATE scheduler SET date=?, title=?, comment=?, repeat=? WHERE id=?`
 	res, err := db.Exec(query, task.Date, task.Title, task.Comment, task.Repeat, task.ID)
 	if err != nil {
-		return err
+		return fmt.Errorf(`{"error":"ошибка бд"}`)
 	}
 
 	count, err := res.RowsAffected()
 	if err != nil {
-		return err
+		return fmt.Errorf(`{"error":"ошибка подсчета"}`)
 	}
 	if count == 0 {
-		return fmt.Errorf(`incorrect id for updating task`)
+		return fmt.Errorf(`{"error":"ошибка счетчик равен 0"}`)
 	}
 	return nil
 }
