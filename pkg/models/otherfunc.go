@@ -1,38 +1,14 @@
-package api
+package model
 
 import (
-	"log"
-	"net/http"
+	"fmt"
+	"strconv"
+	"strings"
 	"time"
 )
 
-func nextDayHandler(res http.ResponseWriter, req *http.Request) {
-	now := req.FormValue("now")
-	date := req.FormValue("date")
-	repeat := req.FormValue("repeat")
+const DateFormat = "20060102"
 
-	res.Header().Set("Content-Type", "application/json; charset=UTF-8")
-
-	nowTime, err := time.Parse(DateFormat, now)
-	if err != nil {
-		http.Error(res, "Некорректный формат даты", http.StatusBadRequest)
-		return
-	}
-	nextDate, err := model.NextDate(nowTime, date, repeat)
-	if err != nil {
-		http.Error(res, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	_, err = res.Write([]byte(nextDate))
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-
-}
-
-/*
 func afterNow(date, now time.Time) bool {
 	dateD := time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, date.Location())
 	nowD := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
@@ -85,4 +61,3 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 	}
 
 }
-*/
