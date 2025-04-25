@@ -9,7 +9,7 @@ import (
 
 const DateFormat = "20060102"
 
-func afterNow(date, now time.Time) bool {
+func AfterNow(date, now time.Time) bool {
 	dateD := time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, date.Location())
 	nowD := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
 
@@ -42,7 +42,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		}
 		for {
 			date = date.AddDate(0, 0, days)
-			if afterNow(date, now) {
+			if AfterNow(date, now) {
 				break
 			}
 		}
@@ -51,7 +51,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 	case "y":
 		for {
 			date = date.AddDate(1, 0, 0)
-			if afterNow(date, now) {
+			if AfterNow(date, now) {
 				break
 			}
 		}

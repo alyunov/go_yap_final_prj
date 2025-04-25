@@ -2,7 +2,6 @@ package db
 
 import (
 	"fmt"
-	"net/http"
 	"time"
 
 	"github.com/alyunov/go_yap_final_prj/pkg/model"
@@ -83,26 +82,24 @@ func UpdateTask(task *Task) error {
 
 	t, err := time.Parse("20060102", task.Date)
 	if err != nil {
-		http.Error(res, `{"error":"Ошибка формата даты"}`, http.StatusBadRequest)
-		return
+		return fmt.Errorf(`{"error":"ошибка формата даты"}`)
 	}
 	now := time.Now()
 
-	if model.afterNow(now, t) {
+	if model.AfterNow(now, t) {
 		if len(task.Repeat) == 0 {
 			task.Date = now.Format("20060102")
 		} else {
 			next, err := model.NextDate(now, task.Date, task.Repeat)
 			if err != nil {
-				http.Error(res, `{"error":"Ошибка правила повторения"}`, http.StatusBadRequest)
-				return
+				return fmt.Errorf(`{"error":"ошибка правила повторения"}`)
 			}
 			task.Date = next
 		}
 	}
 
 	query := `UPDATE scheduler SET date=?, title=?, comment=?, repeat=? WHERE id=?`
-	res, err := db.Exec(query, t.Date, t.Title, t.Comment, t.Repeat, t.ID)
+	res, err := db.Exec(query, task.Date, task.Title, task.Comment, task.Repeat, task.ID)
 	if err != nil {
 		return err
 	}

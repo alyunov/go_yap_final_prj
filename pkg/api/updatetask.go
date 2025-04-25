@@ -14,7 +14,7 @@ func updateTaskHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, `{"error":"Ошибка десериализации JSON"}`, http.StatusBadRequest)
 		return
 	}
-	err = db.UpdateTask(t)
+	err = db.UpdateTask(&t)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
