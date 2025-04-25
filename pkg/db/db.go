@@ -18,7 +18,7 @@ func Init(dbFile string) error {
 		install = true
 	}
 
-	db, err := sql.Open("sqlite", dbFile)
+	db, err = sql.Open("sqlite", dbFile)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -46,6 +46,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 	if repeat == "" {
 		return "", fmt.Errorf("пустой repeat")
 	}
+
 	date, err := time.Parse(DateFormat, dstart)
 	if err != nil {
 		return "", fmt.Errorf("неверный формат даты: %v", err)
