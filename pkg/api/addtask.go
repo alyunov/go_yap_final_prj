@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/alyunov/go_yap_final_prj/pkg/db"
+	"github.com/alyunov/go_yap_final_prj/pkg/model"
 )
 
 func addTaskHandler(res http.ResponseWriter, req *http.Request) {
@@ -33,11 +34,11 @@ func addTaskHandler(res http.ResponseWriter, req *http.Request) {
 	}
 	now := time.Now()
 
-	if afterNow(now, t) {
+	if model.AfterNow(now, t) {
 		if len(task.Repeat) == 0 {
 			task.Date = now.Format("20060102")
 		} else {
-			next, err := NextDate(now, task.Date, task.Repeat)
+			next, err := model.NextDate(now, task.Date, task.Repeat)
 			if err != nil {
 				http.Error(res, `{"error":"Ошибка правила повторения"}`, http.StatusBadRequest)
 				return
