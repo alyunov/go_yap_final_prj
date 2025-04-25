@@ -2,15 +2,13 @@ package main
 
 import (
 	"log"
-	"net/http"
+
+	"github.com/alyunov/go_yap_final_prj/pkg/server"
 )
 
 func main() {
-	webDir := "./web"
 
-	http.Handle("/", http.FileServer(http.Dir(webDir)))
-
-	err := http.ListenAndServe(":7540", nil)
+	err := server.Run()
 	if err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
